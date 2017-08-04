@@ -1,10 +1,12 @@
 package com.zzf.zzweather.zzweather;
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+
 /**
  * Created by zzf on 2017/8/4.
  */
@@ -54,6 +57,7 @@ public class ChooseAreaFragmnet extends Fragment {
     private List<City> cityList;
     private List<County> countyList;
     private ProgressDialog progressDialog;
+    private String TAG = "ChooseAreaFragmnet.class";
 
     @Nullable
     @Override
@@ -84,7 +88,6 @@ public class ChooseAreaFragmnet extends Fragment {
                     selectedCity = cityList.get(position);
                     queryCounties();
                 }
-                queryProvincees();
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +100,7 @@ public class ChooseAreaFragmnet extends Fragment {
                 }
             }
         });
+        queryProvincees();
     }
 
     /*
@@ -120,6 +124,7 @@ public class ChooseAreaFragmnet extends Fragment {
         }
     }
 
+    //@SuppressLint("LongLogTag")
     private void queryCities() {
         titleText.setText(selectedProvince.getProvinceName());
         backButton.setVisibility(View.VISIBLE);
@@ -129,13 +134,14 @@ public class ChooseAreaFragmnet extends Fragment {
             dataList.clear();
             for (City city : cityList) {
                 dataList.add(city.getCityName());
+              //  Log.i(TAG,city.getCityName());
             }
             adapter.notifyDataSetChanged();
             listView.setSelection(0);
             currentLevel = LEVEL_CITY;
         } else {
             int provinceCode = selectedProvince.getProvinceCode();
-            String address = "http://guolin.tech/api/china";
+            String address = "http://guolin.tech/api/china"+"/"+provinceCode;
             queryFromServer(address, "city");
         }
     }
@@ -155,7 +161,7 @@ public class ChooseAreaFragmnet extends Fragment {
         } else {
             int provinceCode = selectedProvince.getProvinceCode();
             int cityCode = selectedCity.getCityCode();
-            String address = "http://guolin.tech/api/china";
+            String address = "http://guolin.tech/api/china"+"/"+provinceCode+"/"+cityCode;
             queryFromServer(address, "county");
         }
     }

@@ -26,7 +26,7 @@ public class Suggestion {
         public String info;
     }
 
-    private class Sport {
+    public class Sport {
         @SerializedName("txt")
         public String info;
     }

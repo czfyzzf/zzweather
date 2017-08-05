@@ -3,9 +3,11 @@ package com.zzf.zzweather.zzweather.util;
 import android.content.ContentUris;
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.zzf.zzweather.zzweather.db.City;
 import com.zzf.zzweather.zzweather.db.County;
 import com.zzf.zzweather.zzweather.db.Province;
+import com.zzf.zzweather.zzweather.gson.Weather;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -72,6 +74,7 @@ public class Utility {
                     JSONObject countyObject = allCounties.getJSONObject(i);
                     County county = new County();
                     county.setCountyName(countyObject.getString("name"));
+                    county.setWeatherId(countyObject.getString("weather_id"));
                     county.setCountyCode(countyObject.getInt("id"));
                     county.setcityId(cityId);
                     county.save();
@@ -82,5 +85,17 @@ public class Utility {
             }
         }
         return false;
+    }
+
+    public static Weather handleWeantherResponse(String response){
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather");
+            String weatherContent = jsonArray.getJSONObject(0).toString();
+            return new Gson().fromJson(weatherContent,Weather.class);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

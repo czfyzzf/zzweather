@@ -1,17 +1,14 @@
 package com.zzf.zzweather.zzweather;
 
-import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -87,6 +84,13 @@ public class ChooseAreaFragmnet extends Fragment {
                 } else if (currentLevel == LEVEL_CITY) {
                     selectedCity = cityList.get(position);
                     queryCounties();
+                }else if(currentLevel == LEVEL_COUNTY){
+                    String weatherId = countyList.get(position).getWeatherId();
+                   // Log.i(TAG,weatherId);
+                    Intent intent = new Intent(getActivity(),WeatherActivitty.class);
+                    intent.putExtra("weather_id",weatherId);
+                    startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });
@@ -134,7 +138,7 @@ public class ChooseAreaFragmnet extends Fragment {
             dataList.clear();
             for (City city : cityList) {
                 dataList.add(city.getCityName());
-              //  Log.i(TAG,city.getCityName());
+                //Log.i(TAG,city.getCityName());
             }
             adapter.notifyDataSetChanged();
             listView.setSelection(0);
